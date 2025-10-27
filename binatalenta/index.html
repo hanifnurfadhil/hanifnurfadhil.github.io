@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sorting Visualizer (Pemandu Talenta)</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 20px;
+        background-color: #f4f7f6;
+        color: #333;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        color: #007bff;
+        text-align: center;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+      }
+
+      .controls,
+      .analysis {
+        margin-bottom: 20px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+      }
+
+      label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+        color: #555;
+      }
+
+      select,
+      input[type="text"],
+      button {
+        padding: 10px 15px;
+        margin-right: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        transition: background-color 0.3s;
+      }
+
+      button:hover:not(:disabled) {
+        background-color: #0056b3;
+      }
+
+      button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+
+      #visualization {
+        display: flex;
+        align-items: flex-end;
+        min-height: 250px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background-color: #fff;
+        margin-top: 20px;
+      }
+
+      .bar {
+        width: 30px;
+        margin: 0 2px;
+        background-color: #4caf50;
+        transition: height 0.3s, background-color 0.3s;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .bar-value {
+        position: absolute;
+        top: -20px;
+        color: #333;
+      }
+
+      .comparing {
+        background-color: #ff9800; /* Orange */
+      }
+
+      .swapping {
+        background-color: #f44336; /* Red */
+      }
+
+      .sorted {
+        background-color: #2196f3; /* Blue */
+      }
+
+      .pivot {
+        background-color: #9c27b0; /* Purple (for Insertion Sort's current element) */
+      }
+
+      #status {
+        margin-top: 15px;
+        padding: 10px;
+        border: 1px solid #007bff;
+        background-color: #e6f0ff;
+        border-radius: 5px;
+      }
+
+      .complexity-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+
+      .complexity-table th,
+      .complexity-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+
+      .complexity-table th {
+        background-color: #007bff;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔬 Virtual Lab Sorting Visualizer</h1>
+
+      <div class="controls">
+        <label for="algorithm">Pilih Algoritma:</label>
+        <select id="algorithm" onchange="resetVisualization()">
+          <option value="bubble">Bubble Sort</option>
+          <option value="insertion">Insertion Sort</option>
+        </select>
+
+        <label for="arrayInput" style="margin-top: 10px"
+          >Data Array (pisahkan dengan koma):</label
+        >
+        <input type="text" id="arrayInput" value="5,1,4,2,8" />
+
+        <button onclick="resetVisualization()">Reset/Mulai</button>
+        <button id="nextStepBtn" onclick="nextStep()" disabled>
+          Langkah Berikutnya (▶)
+        </button>
+      </div>
+
+      <div class="analysis">
+        <h2>Analisis Kompleksitas</h2>
+        <div id="complexityInfo">Pilih algoritma dan klik Reset/Mulai.</div>
+
+        <h3 style="margin-top: 15px">Langkah-Langkah Saat Ini</h3>
+        <div id="status"></div>
+      </div>
+
+      <div id="visualization"></div>
+    </div>
+
+    <script>
+      let array = [];
+      let history = [];
+      let stepIndex = 0;
+      let maxArrayValue = 0;
+      let algorithm = "bubble";
+      const MAX_HEIGHT = 200;
+
+      function parseInput() {
+        const input = document.getElementById("arrayInput").value;
+        // Hanya ambil bilangan bulat positif
+        const parsedArray = input
+          .split(",")
+          .map((s) => parseInt(s.trim()))
+          .filter((n) => !isNaN(n) && n > 0);
+        if (parsedArray.length === 0) {
+          alert(
+            "Array tidak valid. Harap masukkan angka positif yang dipisahkan koma."
+          );
+          return [5, 1, 4, 2, 8]; // Default array
+        }
+        return parsedArray;
+      }
+
+      function resetVisualization() {
+        array = parseInput();
+        maxArrayValue = Math.max(...array);
+        algorithm = document.getElementById("algorithm").value;
+        stepIndex = 0;
+        history = [];
+
+        // Disable Next button until history is populated
+        document.getElementById("nextStepBtn").disabled = true;
+
+        if (algorithm === "bubble") {
+          generateBubbleSortHistory(array);
+        } else if (algorithm === "insertion") {
+          generateInsertionSortHistory(array);
+        }
+
+        updateComplexityInfo();
+        document.getElementById("nextStepBtn").disabled = history.length <= 1;
+        drawVisualization(history[0]);
+      }
+
+      // --- ALGORITHMS & HISTORY GENERATION ---
+
+      function generateBubbleSortHistory(arr) {
+        let currentArray = [...arr];
+        let n = currentArray.length;
+
+        // Initial state
+        history.push({
+          array: [...currentArray],
+          comparing: [],
+          swapping: [],
+          sorted: [],
+          message: "Mulai Bubble Sort.",
+        });
+
+        for (let i = 0; i < n - 1; i++) {
+          let swapped = false;
+          for (let j = 0; j < n - 1 - i; j++) {
+            // State before comparison
+            history.push({
+              array: [...currentArray],
+              comparing: [j, j + 1],
+              swapping: [],
+              sorted: Array.from({ length: i }, (_, k) => n - 1 - k), // Mark elements from the end as sorted
+              message: `Bandingkan array[${j}] (${currentArray[j]}) dan array[${
+                j + 1
+              }] (${currentArray[j + 1]}).`,
+            });
+
+            if (currentArray[j] > currentArray[j + 1]) {
+              // Swap
+              [currentArray[j], currentArray[j + 1]] = [
+                currentArray[j + 1],
+                currentArray[j],
+              ];
+              swapped = true;
+
+              // State after swap
+              history.push({
+                array: [...currentArray],
+                comparing: [],
+                swapping: [j, j + 1],
+                sorted: Array.from({ length: i }, (_, k) => n - 1 - k),
+                message: `Swap! array[${j}] dan array[${j + 1}] ditukar.`,
+              });
+            }
+          }
+
+          // Mark the largest element of this pass as sorted
+          history.push({
+            array: [...currentArray],
+            comparing: [],
+            swapping: [],
+            sorted: Array.from({ length: i + 1 }, (_, k) => n - 1 - k),
+            message: `Pass selesai. Elemen terbesar (${
+              currentArray[n - 1 - i]
+            }) sudah berada di posisi akhir.`,
+          });
+
+          if (!swapped && i > 0) {
+            // Optimization: If no two elements were swapped by inner loop, then array is sorted.
+            // Complete the remaining sorted marks
+            for (let k = i + 1; k < n; k++) {
+              history.push({
+                array: [...currentArray],
+                comparing: [],
+                swapping: [],
+                sorted: Array.from({ length: k }, (_, l) => n - 1 - l),
+                message: `Array sudah terurut. Pengurutan dipercepat (Optimasi Bubble Sort).`,
+              });
+            }
+            break;
+          }
+        }
+
+        // Final state: all sorted
+        history.push({
+          array: [...currentArray],
+          comparing: [],
+          swapping: [],
+          sorted: Array.from({ length: n }, (_, k) => k),
+          message: "Pengurutan Selesai!",
+        });
+      }
+
+      function generateInsertionSortHistory(arr) {
+        let currentArray = [...arr];
+        let n = currentArray.length;
+
+        // Initial state
+        history.push({
+          array: [...currentArray],
+          pivot: 1, // Current element to insert
+          comparing: [],
+          swapping: [],
+          sorted: [0], // Initial sorted section
+          message:
+            "Mulai Insertion Sort. Elemen pertama dianggap sudah terurut.",
+        });
+
+        for (let i = 1; i < n; i++) {
+          let key = currentArray[i];
+          let j = i - 1;
+
+          history.push({
+            array: [...currentArray],
+            pivot: i,
+            comparing: [],
+            swapping: [],
+            sorted: Array.from({ length: i }, (_, k) => k),
+            message: `Ambil array[${i}] (${key}) sebagai kunci. Sisipkan ke bagian terurut.`,
+          });
+
+          while (j >= 0 && currentArray[j] > key) {
+            // Comparison and shift/swap
+            history.push({
+              array: [...currentArray],
+              pivot: i,
+              comparing: [j, i],
+              swapping: [],
+              sorted: Array.from({ length: i }, (_, k) => k),
+              message: `Bandingkan array[${j}] (${currentArray[j]}) dan kunci (${key}). Geser array[${j}] ke kanan.`,
+            });
+
+            currentArray[j + 1] = currentArray[j];
+
+            history.push({
+              array: [...currentArray],
+              pivot: i,
+              comparing: [],
+              swapping: [j + 1], // Highlight the shifted element
+              sorted: Array.from({ length: i }, (_, k) => k),
+              message: `Geser array[${j}] ke posisi ${j + 1}.`,
+            });
+
+            j = j - 1;
+          }
+
+          currentArray[j + 1] = key; // Place the key
+
+          // Final placement state
+          history.push({
+            array: [...currentArray],
+            pivot: j + 1, // Highlight the final position of the key
+            comparing: [],
+            swapping: [],
+            sorted: Array.from({ length: i + 1 }, (_, k) => k),
+            message: `Kunci (${key}) disisipkan pada array[${
+              j + 1
+            }]. Bagian terurut bertambah.`,
+          });
+        }
+
+        // Final state: all sorted
+        history.push({
+          array: [...currentArray],
+          pivot: -1,
+          comparing: [],
+          swapping: [],
+          sorted: Array.from({ length: n }, (_, k) => k),
+          message: "Pengurutan Selesai!",
+        });
+      }
+
+      // --- VISUALIZATION & CONTROL ---
+
+      function drawVisualization(state) {
+        const visualizationDiv = document.getElementById("visualization");
+        const statusDiv = document.getElementById("status");
+        visualizationDiv.innerHTML = "";
+
+        state.array.forEach((value, index) => {
+          const height = (value / maxArrayValue) * MAX_HEIGHT;
+          const bar = document.createElement("div");
+          bar.classList.add("bar");
+          bar.style.height = `${height}px`;
+          bar.style.width = `${
+            visualizationDiv.clientWidth / state.array.length - 4
+          }px`;
+          bar.textContent = value; // Show value inside the bar
+
+          // Set colors based on state
+          if (state.sorted.includes(index)) {
+            bar.classList.add("sorted");
+          } else if (state.swapping.includes(index)) {
+            bar.classList.add("swapping");
+          } else if (state.comparing.includes(index)) {
+            bar.classList.add("comparing");
+          } else if (algorithm === "insertion" && state.pivot === index) {
+            bar.classList.add("pivot");
+          }
+
+          visualizationDiv.appendChild(bar);
+        });
+
+        statusDiv.textContent = `Langkah ${stepIndex} dari ${
+          history.length - 1
+        }: ${state.message}`;
+
+        // Disable button if at the end
+        document.getElementById("nextStepBtn").disabled =
+          stepIndex >= history.length - 1;
+      }
+
+      function nextStep() {
+        if (stepIndex < history.length - 1) {
+          stepIndex++;
+          drawVisualization(history[stepIndex]);
+        }
+      }
+
+      function updateComplexityInfo() {
+        let info = "";
+        if (algorithm === "bubble") {
+          info = `
+                <p>Algoritma yang dipilih: <strong>Bubble Sort</strong></p>
+                <table class="complexity-table">
+                    <tr><th>Kasus</th><th>Kompleksitas Waktu</th><th>Kompleksitas Ruang</th></tr>
+                    <tr><td>Worst Case (Terburuk)</td><td>$O(N^2)$</td><td>$O(1)$</td></tr>
+                    <tr><td>Average Case (Rata-rata)</td><td>$O(N^2)$</td><td>$O(1)$</td></tr>
+                    <tr><td>Best Case (Terbaik - Terurut)</td><td>$O(N)$ (Dengan Optimasi)</td><td>$O(1)$</td></tr>
+                </table>
+                <p><strong>Analisis:</strong> Membandingkan dan menukar elemen yang berdekatan berulang kali. $N^2$ karena harus membandingkan hampir semua pasangan.</p>
+            `;
+        } else if (algorithm === "insertion") {
+          info = `
+                <p>Algoritma yang dipilih: <strong>Insertion Sort</strong></p>
+                <table class="complexity-table">
+                    <tr><th>Kasus</th><th>Kompleksitas Waktu</th><th>Kompleksitas Ruang</th></tr>
+                    <tr><td>Worst Case (Terburuk)</td><td>$O(N^2)$</td><td>$O(1)$</td></tr>
+                    <tr><td>Average Case (Rata-rata)</td><td>$O(N^2)$</td><td>$O(1)$</td></tr>
+                    <tr><td>Best Case (Terbaik - Terurut)</td><td>$O(N)$</td><td>$O(1)$</td></tr>
+                </table>
+                <p><strong>Analisis:</strong> Menyisipkan elemen ke posisi yang benar dalam sub-array yang sudah terurut. $N^2$ karena dalam kasus terburuk, harus membandingkan dan menggeser hingga $N$ elemen sebanyak $N$ kali.</p>
+            `;
+        }
+        document.getElementById("complexityInfo").innerHTML = info;
+      }
+
+      // Initialize on load
+      window.onload = resetVisualization;
+    </script>
+  </body>
+</html>
