@@ -160,17 +160,15 @@
           >Data Array (pisahkan dengan koma):</label
         >
         <input type="text" id="arrayInput" value="5,1,4,2,8" />
-
-        <button onclick="resetVisualization()">Reset/Mulai</button>
-        <button id="nextStepBtn" onclick="nextStep()" disabled>
-          Langkah Berikutnya (▶)
-        </button>
       </div>
 
       <div class="analysis">
         <h2>Analisis Kompleksitas</h2>
         <div id="complexityInfo">Pilih algoritma dan klik Reset/Mulai.</div>
-
+        <button onclick="resetVisualization()">Reset/Mulai</button>
+        <button id="nextStepBtn" onclick="nextStep()" disabled>
+          Langkah Berikutnya (▶)
+        </button>
         <h3 style="margin-top: 15px">Langkah-Langkah Saat Ini</h3>
         <div id="status"></div>
       </div>
