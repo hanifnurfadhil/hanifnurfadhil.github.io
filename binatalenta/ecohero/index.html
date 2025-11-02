@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EcoHero - Bermain, Belajar, Beraksi untuk Bumi!</title>
+    <!-- Load Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <style>
+      /* Custom CSS to ensure canvas fits and is centered */
+      #webcam-container canvas {
+        display: block;
+        margin: 0 auto;
+        border-radius: 0.75rem; /* rounded-xl */
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            },
+            colors: {
+              "eco-green": "#10b981" /* Emerald 500 */,
+              "eco-blue": "#3b82f6" /* Blue 500 */,
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-gray-100 font-sans antialiased">
+    <!-- Konten Utama Aplikasi -->
+    <div class="min-h-screen flex items-center justify-center p-4">
+      <div
+        class="w-full max-w-xl bg-white p-6 md:p-10 shadow-2xl rounded-2xl border border-gray-200"
+      >
+        <!-- Header dan Judul -->
+        <header class="text-center mb-8">
+          <h1 class="text-4xl md:text-5xl font-extrabold text-eco-green mb-2">
+            <i class="fas fa-leaf mr-2"></i> EcoHero
+          </h1>
+          <p class="text-lg text-gray-600" style="color: #10b981">
+            Bermain, Belajar, Beraksi untuk Bumi!
+          </p>
+          <br />
+          <p class="text-lg text-gray-600">
+            Mari uji kemampuan kamu dalam memilah sampah!
+          </p>
+        </header>
+
+        <!-- Display Kamera -->
+        <div class="flex flex-col items-center mb-6 space-y-4">
+          <div
+            id="webcam-container"
+            class="border-4 border-eco-green rounded-xl overflow-hidden shadow-xl w-[250px] h-[250px] flex items-center justify-center bg-gray-200"
+          >
+            <!-- Canvas webcam akan ditambahkan di sini oleh JavaScript -->
+            <p id="init-message" class="text-sm text-gray-500 p-4 text-center">
+              Tekan Mulai untuk mengaktifkan kamera.
+            </p>
+          </div>
+
+          <button
+            id="start-button"
+            type="button"
+            onclick="init()"
+            class="w-full max-w-[250px] bg-eco-blue text-white p-3 rounded-lg font-semibold hover:bg-blue-600 transition duration-150 shadow-md disabled:opacity-50"
+          >
+            <i class="fas fa-video mr-2"></i> Mulai Program
+          </button>
+        </div>
+
+        <!-- Pertanyaan Prediksi: Tombol Jawaban User -->
+        <div class="mt-8">
+          <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">
+            Manakah jenis sampah yang kamu lihat?
+          </h3>
+          <div id="game-buttons" class="grid grid-cols-2 gap-4">
+            <button
+              class="organik p-4 rounded-xl font-bold text-white shadow-lg transition duration-200 transform hover:scale-[1.02] bg-green-600 hover:bg-green-700 disabled:opacity-40"
+              disabled
+            >
+              Organik
+            </button>
+            <button
+              class="kertas p-4 rounded-xl font-bold text-white shadow-lg transition duration-200 transform hover:scale-[1.02] bg-blue-600 hover:bg-blue-700 disabled:opacity-40"
+              disabled
+            >
+              Kertas
+            </button>
+            <button
+              class="plastik p-4 rounded-xl font-bold text-white shadow-lg transition duration-200 transform hover:scale-[1.02] bg-yellow-600 hover:bg-yellow-700 disabled:opacity-40"
+              disabled
+            >
+              Plastik
+            </button>
+            <button
+              class="logam p-4 rounded-xl font-bold text-white shadow-lg transition duration-200 transform hover:scale-[1.02] bg-gray-700 hover:bg-gray-800 disabled:opacity-40"
+              disabled
+            >
+              Logam
+            </button>
+          </div>
+        </div>
+
+        <!-- Pengecekan Hasil -->
+        <div
+          id="result-message"
+          class="mt-8 p-5 rounded-xl text-center text-white font-extrabold min-h-[70px] flex items-center justify-center transition-all duration-500 bg-gray-400 shadow-inner"
+        >
+          <i class="fas fa-hand-pointer mr-2"></i> Silakan tekan "Mulai
+          Tantangan" di atas.
+        </div>
+
+        <!-- Kontainer untuk semua hasil prediksi model (Disembunyikan) -->
+        <div id="label-container" class="hidden"></div>
+      </div>
+    </div>
+
+    <!-- TensorFlow dan Teachable Machine Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+
+    <script src="ecohero.js"></script>
+  </body>
+</html>
