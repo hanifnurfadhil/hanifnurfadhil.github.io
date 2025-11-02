@@ -40,7 +40,17 @@ async function init() {
     // Setup webcam
     const flip = true;
     webcam = new tmImage.Webcam(250, 250, flip); // width, height, flip
-    await webcam.setup();
+
+    // Tentukan constraints video untuk meminta kamera belakang (facingMode: "environment")
+    const videoConstraints = {
+      width: 250,
+      height: 250,
+      // 'environment' mencoba mengaktifkan kamera belakang
+      facingMode: "environment",
+    };
+
+    await webcam.setup({ video: videoConstraints });
+
     await webcam.play();
     isWebcamActive = true;
 
