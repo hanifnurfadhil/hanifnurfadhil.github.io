@@ -4,18 +4,17 @@ const URL = "https://teachablemachine.withgoogle.com/models/LZguVfn4B/";
 let model, webcam, maxPredictions;
 let bestClass = "unknown";
 let isWebcamActive = false;
-// KODE BARU START: Variabel state untuk kamera dan model
+// Variabel state untuk kamera dan model
 let isModelLoaded = false;
 let isLooping = false;
 let currentFacingMode = "environment"; // Default ke kamera belakang/lingkungan
-// KODE BARU END
 
 // Element DOM
 const webcamContainer = document.getElementById("webcam-container");
 const labelContainer = document.getElementById("label-container");
 const initMessage = document.getElementById("init-message");
 const startButton = document.getElementById("start-button");
-const toggleButton = document.getElementById("toggle-camera-button"); // KODE BARU: Referensi tombol toggle
+const toggleButton = document.getElementById("toggle-camera-button");
 const resultMessage = document.getElementById("result-message");
 
 const organikButton = document.querySelector(".organik");
@@ -26,13 +25,22 @@ const allButtons = [organikButton, kertasButton, plastikButton, logamButton];
 
 // --- FUNGSI UTAMA TEAHCABLE MACHINE ---
 
-// KODE DIUBAH START: Memuat model hanya sekali dan memanggil startWebcam
+// Fungsi untuk menghentikan stream webcam
+function stopWebcam() {
+  if (webcam && webcam.webcam) {
+    // webcam.stop() adalah fungsi dari tmImage.Webcam yang menghentikan stream
+    webcam.stop();
+  }
+  isWebcamActive = false;
+  isLooping = false;
+}
+
 async function init() {
+  if (isModelLoaded && isWebcamActive) return;
+
   if (isModelLoaded) {
-    // Jika model sudah dimuat, langsung mulai ulang webcam (jika sebelumnya dimatikan)
-    if (!isWebcamActive) {
-      await startWebcam(currentFacingMode);
-    }
+    // Jika model sudah dimuat, langsung mulai ulang webcam
+    await startWebcam(currentFacingMode);
     return;
   }
 
@@ -78,36 +86,39 @@ async function init() {
     toggleButton.disabled = true;
   }
 }
-// KODE DIUBAH END: Memuat model hanya sekali dan memanggil startWebcam
 
-// KODE BARU START: Fungsi untuk memulai atau mengganti webcam
+// Fungsi untuk memulai atau mengganti webcam
 async function startWebcam(mode) {
-  // Hentikan webcam yang ada jika aktif
-  if (webcam && webcam.webcam) {
-    webcam.stop();
-    isWebcamActive = false;
-  }
+  // 1. Tunjukkan status loading & nonaktifkan tombol
+  initMessage.innerHTML =
+    '<i class="fas fa-sync-alt fa-spin mr-2"></i> Mengganti kamera...';
+  toggleButton.disabled = true;
 
-  // Setup webcam baru
-  const flip = mode === "user"; // Flip untuk kamera depan
+  // 2. Hentikan webcam yang ada
+  stopWebcam();
+
+  // 3. Setup webcam baru
+  // Flip=true untuk kamera depan ('user') agar terlihat seperti cermin
+  const flip = mode === "user";
   webcam = new tmImage.Webcam(250, 250, flip);
 
   const videoConstraints = {
     width: 250,
     height: 250,
-    facingMode: mode, // 'environment' (belakang) atau 'user' (depan)
+    // facingMode adalah properti yang diminta ke browser
+    facingMode: mode,
   };
 
   try {
     await webcam.setup({ video: videoConstraints });
     await webcam.play();
     isWebcamActive = true;
-    currentFacingMode = mode; // Pastikan mode saat ini diperbarui
+    currentFacingMode = mode;
 
     // Update DOM
     webcamContainer.innerHTML = "";
     webcamContainer.appendChild(webcam.canvas);
-    initMessage.textContent = ""; // Hapus pesan inisialisasi jika ada
+    initMessage.textContent = "";
 
     // Update tombol toggle
     if (mode === "environment") {
@@ -118,6 +129,8 @@ async function startWebcam(mode) {
         '<i class="fas fa-camera-rotate mr-2"></i> Ganti ke Belakang';
     }
 
+    toggleButton.disabled = false; // Aktifkan lagi tombol toggle
+
     // Mulai loop prediksi jika belum berjalan
     if (!isLooping) {
       window.requestAnimationFrame(loop);
@@ -126,10 +139,17 @@ async function startWebcam(mode) {
   } catch (e) {
     console.error(`Gagal mengatur webcam ke mode ${mode}:`, e);
 
-    if (mode === "environment" && currentFacingMode === "environment") {
-      // Jika gagal menggunakan mode 'environment', coba mode 'user' sebagai fallback
-      console.log("Mencoba kamera depan sebagai fallback...");
+    // Masalah ini sering terjadi: Browser gagal mengaktifkan kamera belakang (environment)
+    if (mode === "environment") {
+      // Tampilkan pesan kesalahan yang lebih spesifik
+      resultMessage.className =
+        "mt-8 p-5 rounded-xl text-center text-white font-extrabold transition-all duration-500 bg-orange-500 shadow-inner";
+      resultMessage.textContent =
+        "⚠️ Browser gagal mengakses kamera belakang. Secara otomatis beralih ke kamera depan. Coba lagi!";
+
+      // Coba mode 'user' sebagai fallback
       currentFacingMode = "user";
+      // Lakukan panggilan ulang untuk memastikan kamera depan aktif
       return startWebcam("user");
     }
 
@@ -144,7 +164,7 @@ async function startWebcam(mode) {
 
 // Fungsi untuk mengganti mode kamera
 function toggleCamera() {
-  if (!isWebcamActive) return;
+  if (!isWebcamActive || !isModelLoaded) return;
 
   // Flip mode
   const newMode = currentFacingMode === "environment" ? "user" : "environment";
@@ -158,9 +178,7 @@ function toggleCamera() {
   // Restart webcam dengan mode baru
   startWebcam(newMode);
 }
-// KODE BARU END: Fungsi untuk memulai atau mengganti webcam
 
-// KODE DIUBAH START: Kontrol loop agar berhenti jika webcam tidak aktif
 async function loop() {
   if (!isWebcamActive) {
     isLooping = false;
@@ -170,11 +188,10 @@ async function loop() {
   await predict();
   window.requestAnimationFrame(loop);
 }
-// KODE DIUBAH END: Kontrol loop agar berhenti jika webcam tidak aktif
 
 // run the webcam image through the image model
 async function predict() {
-  if (!model || !webcam) return;
+  if (!model || !webcam || !isWebcamActive) return;
 
   const prediction = await model.predict(webcam.canvas);
   let highestProbability = 0;
