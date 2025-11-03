@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Batu Gunting Kertas - V2</title>
+    <link rel="stylesheet" href="src/output.css" />
+    <style>
+      body {
+        background-image: url(img/bg.jpg);
+      }
+      /* {
+        border: 1px solid black;
+      } */
+    </style>
+  </head>
+  <body class="bg-center bg-contain">
+    <h1
+      class="my-5 md:my-10 w-full font-bold text-center text-3xl md:text-4xl text-shadow-lg"
+    >
+      GAME BATU GUNTING KERTAS
+    </h1>
+
+    <div
+      class="container w-full mx-auto relative md:max-w-xl md:max-h-[24rem] md:mx-auto"
+    >
+      <div
+        class="computer-area bg-[#F8F7BA] w-full h-60 md:h-[12rem] rounded-t-4xl text-center font-bold relative border-t-2 border-x-2 border-gray-700"
+      >
+        <div class="absolute top-4 left-1/2 w-40 -ml-[5rem]">Computer</div>
+        <div
+          class="score-c text-xs flex items-center justify-center bg-[#BDE3C3] w-10 h-10 absolute top-5 left-5 rounded-full border-2 border-gray-700"
+        >
+          0
+        </div>
+        <div
+          class="pic-computer border-2 border-gray-700 bg-gray-100 w-24 h-24 md:w-20 md:h-20 md:-mt-[2rem] md:-ml-[2.5rem] absolute top-1/2 -mt-[3rem] left-1/2 -ml-[3rem] z-10 rounded-full flex items-center justify-center"
+        >
+          <img
+            src="img/question.png"
+            alt="question-mark"
+            class="comPic h-10 w-10"
+          />
+        </div>
+      </div>
+      <div
+        class="info-area bg-[#F5D2D2] w-40 h-16 md:h-10 absolute top-1/2 right-1/2 -mr-[5rem] -mt-[2rem] md:-mt-[20px] z-10 rounded-full border-2 border-gray-700 flex items-center justify-center font-bold text-shadow-2xs"
+      >
+        ---
+      </div>
+      <div
+        class="player-area bg-[#A3CCDA] flex flex-col w-full h-60 md:h-[12rem] rounded-b-4xl text-center justify-end font-bold relative border-2 border-gray-700"
+      >
+        <div class="absolute bottom-4 left-1/2 w-40 -ml-[5rem]">Player</div>
+        <div
+          class="pic-player border-2 border-gray-700 bg-gray-100 w-24 h-24 md:w-20 md:h-20 md:-mt-[3rem] md:-ml-[2.5rem] absolute top-1/2 -mt-[3rem] left-1/2 -ml-[3rem] rounded-full flex items-center justify-center"
+        >
+          <img
+            src="img/question.png"
+            alt="question-mark"
+            class="pPic h-10 w-10"
+          />
+        </div>
+        <div
+          class="score-p text-xs flex items-center justify-center bg-[#BDE3C3] w-10 h-10 absolute bottom-5 right-5 rounded-full border-2 border-gray-700"
+        >
+          0
+        </div>
+      </div>
+    </div>
+    <div class="mt-5 mb-2 font-bold text-center">Pilihan:</div>
+    <div class="choice flex flex-row justify-center gap-7">
+      <div
+        class="batu w-16 h-16 rounded-full border-2 border-gray-700 flex items-center justify-center bg-[#A3CCDA] hover:-translate-y-1 active:bg-[#88aab6]"
+      >
+        <img src="img/batu.png" alt="batu" class="h-10 w-10" />
+      </div>
+      <div
+        class="gunting w-16 h-16 rounded-full border-2 border-gray-700 flex items-center justify-center bg-[#A3CCDA] hover:-translate-y-1 active:bg-[#88aab6]"
+      >
+        <img src="img/gunting.png" alt="batu" class="h-10 w-10" />
+      </div>
+      <div
+        class="kertas w-16 h-16 rounded-full border-2 border-gray-700 flex items-center justify-center bg-[#A3CCDA] hover:-translate-y-1 active:bg-[#88aab6]"
+      >
+        <img src="img/kertas.png" alt="batu" class="h-10 w-10" />
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
