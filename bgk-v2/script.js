@@ -77,6 +77,7 @@ pBatu.addEventListener("click", function () {
   let player = "batu";
   pPic.setAttribute("src", "img/" + player + ".png");
   acakAnimate();
+  disableButton();
   setTimeout(() => {
     if (player === com) {
       result = "SERI!";
@@ -105,6 +106,7 @@ pGunting.addEventListener("click", function () {
   let player = "gunting";
   pPic.setAttribute("src", "img/" + player + ".png");
   acakAnimate();
+  disableButton();
   setTimeout(() => {
     if (player === com) {
       result = "SERI!";
