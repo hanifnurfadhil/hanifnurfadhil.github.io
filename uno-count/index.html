@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Uno Point Counter</title>
+    <link rel="stylesheet" href="src/output.css" />
+    <style>
+      /* * {
+        border: 1px solid black;
+      } */
+    </style>
+  </head>
+  <body>
+    <div
+      class="mainContainer mx-auto md:max-w-2xl md:p-3 md:my-5 md:rounded-4xl md:border-2"
+    >
+      <div class="sticky top-0">
+        <h1 class="font-bold text-3xl text-center p-3 mb-3">
+          UNO POINT COUNTER
+        </h1>
+        <div class="container">
+          <form>
+            <input
+              type="text"
+              placeholder="add player name"
+              class="inputPlayerName flex mx-auto border-gray-600 border-solid border-2 pl-2"
+            />
+            <button
+              type="button"
+              class="addPlayerButton h-7 my-3 p-2 mx-auto flex items-center bg-gray-300 text-xs rounded-lg border-gray-600 border-solid border-2 hover:bg-gray-400 active:-translate-y-0.5"
+            >
+              Add Player
+            </button>
+          </form>
+          <div class="playerArea flex flex-wrap gap-3 justify-center"></div>
+        </div>
+      </div>
+      <div class="cardList my-5 flex flex-wrap justify-center gap-2 md:gap-3">
+        <img
+          src="img/0.jpg"
+          class="card0 flex-none w-15 h-24 active:-translate-y-1.5 hover:-translate-y-0.5"
+        />
+        <img
+          src="img/1.jpg"
+          class="card1 flex-none w-15 h-24 active:-translate-y-1.5 hover:-translate-y-0.5"
+        />
+        <img
+          src="img/2.jpg"
+          class="card2 flex-none w-15 h-24 active:-translate-y-1.5 hover:-translate-y-0.5"
+        />
+        <img
+          src="img/3.jpg"
+          class="card3 flex-none w-15 h-24 active:-translate-y-1.5 hover:-translate-y-0.5"
+        />
+        <img
+          src="img/4.jpg"
+          class="card4 flex-none w-15 h-24 active:-translate-y-1.5 hover:-translate-y-0.5"
+        />
+        <img
+          src="img/5.jpg"
+          class="card5 flex-none w-15 h-24 active:-translate-y-1.5 hover:-translate-y-0.5"
+        />
+        <img
+          src="img/6.jpg"
+          class="card6 flex-none w-15 h-24 active:-translate-y-1.5 hover:-translate-y-0.5"
+        />
+        <img
+          src="img/7.jpg"
+          class="card7 flex-none w-15 h-24 active:-translate-y-1.5 hover:-translate-y-0.5"
+        />
+        <img
+          src="img/8.jpg"
+          class="card8 flex-none w-15 h-24 active:-translate-y-1.5 hover:-translate-y-0.5"
+        />
+        <img
+          src="img/9.jpg"
+          class="card9 flex-none w-15 h-24 active:-translate-y-1.5 hover:-translate-y-0.5"
+        />
+        <img
+          src="img/plus-one.jpg"
+          class="card10 flex-none w-15 h-24 active:-translate-y-1.5 hover:-translate-y-0.5"
+        />
+        <img
+          src="img/reverse.jpg"
+          class="card20 flex-none w-15 h-24 active:-translate-y-1.5 hover:-translate-y-0.5"
+        />
+        <img
+          src="img/skip.jpg"
+          class="card20 flex-none w-15 h-24 active:-translate-y-1.5 hover:-translate-y-0.5"
+        />
+        <img
+          src="img/flip.jpg"
+          class="card20 flex-none w-15 h-24 active:-translate-y-1.5 hover:-translate-y-0.5"
+        />
+        <img
+          src="img/skip-everyone.jpg"
+          class="card30 flex-none w-15 h-24 active:-translate-y-1.5 hover:-translate-y-0.5"
+        />
+        <img
+          src="img/wild.jpg"
+          class="card40 flex-none w-15 h-24 active:-translate-y-1.5 hover:-translate-y-0.5"
+        />
+        <img
+          src="img/draw-two.jpg"
+          class="card50 flex-none w-15 h-24 active:-translate-y-1.5 hover:-translate-y-0.5"
+        />
+        <img
+          src="img/draw-color.jpg"
+          class="card60 flex-none w-15 h-24 active:-translate-y-1.5 hover:-translate-y-0.5"
+        />
+      </div>
+      <button
+        class="reset h-7 my-3 p-2 mx-auto flex items-center bg-gray-300 text-xs rounded-lg border-gray-600 border-solid border-2 hover:bg-gray-400 active:-translate-y-0.5"
+      >
+        Reset Poin
+      </button>
+
+      <details class="p-2">
+        <summary
+          class="text-center w-44 mx-auto mb-3 p-2 bg-gray-300 text-xs rounded-lg border-gray-600 border-solid border-2"
+        >
+          Petunjuk Penggunaan
+        </summary>
+        <ol class="ml-3 text-xs list-decimal">
+          <li>Tulis nama player di kotak input dan klik add player</li>
+          <li>Klik nama player untuk mengaktifkan fungsi penambahan poin</li>
+          <li>
+            Klik kartu untuk menambahkan poin pada player yang dipilih (klik 2
+            kali akan menambahkan poin sebanyak 2 kali, dst)
+          </li>
+        </ol>
+      </details>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
