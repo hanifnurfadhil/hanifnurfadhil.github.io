@@ -176,12 +176,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- SCENARIO 1: INPUT NAMA (Dimulai langsung dari sini) ---
     await setDialogue(
-      "Guru Batik",
+      "Guru BaTIK",
       "Halo! Selamat datang di aplikasi BaTIK. Sebelum kita mulai, siapa nama kamu?"
     );
     state.userName = await waitForInput("Masukkan nama kamu...");
     await setDialogue(
-      "Guru Batik",
+      "Guru BaTIK",
       `Halo ${state.userName}! Mari kita mulai pelajaran tentang pola batik dan informatika.`
     );
     await waitForPlayerClick();
@@ -190,7 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let batik1Valid = false;
     while (!batik1Valid) {
       await setDialogue(
-        "Guru Batik",
+        "Guru BaTIK",
         "Masukkan hasil deteksi batik pertama (Contoh: Besurek, Kawung, Parang):"
       );
       const input = await waitForInput("Nama batik 1...");
@@ -198,17 +198,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (batikInfo.found) {
         state.batik1 = input.toLowerCase();
-        await setDialogue("Guru Batik", batikInfo.info);
+        await setDialogue("Guru BaTIK", batikInfo.info);
         batik1Valid = true;
       } else {
-        await setDialogue("Guru Batik", batikInfo.info);
+        await setDialogue("Guru BaTIK", batikInfo.info);
       }
       await waitForPlayerClick();
     }
 
     // --- SCENARIO 3: LANJUT KE BATIK 2? ---
     await setDialogue(
-      "Guru Batik",
+      "Guru BaTIK",
       "Apakah kamu ingin lanjut mendeteksi batik kedua?"
     );
     const lanjut1 = await waitForYN("Ya, Lanjut", "Tidak, Cukup satu");
@@ -217,16 +217,16 @@ document.addEventListener("DOMContentLoaded", () => {
       // --- SCENARIO 4: INPUT BATIK 2 ---
       let batik2Valid = false;
       while (!batik2Valid) {
-        await setDialogue("Guru Batik", "Masukkan hasil deteksi batik kedua:");
+        await setDialogue("Guru BaTIK", "Masukkan hasil deteksi batik kedua:");
         const input = await waitForInput("Nama batik 2...");
         const batikInfo = getBatikInformation(input);
 
         if (batikInfo.found) {
           state.batik2 = input.toLowerCase();
-          await setDialogue("Guru Batik", batikInfo.info);
+          await setDialogue("Guru BaTIK", batikInfo.info);
           batik2Valid = true;
         } else {
-          await setDialogue("Guru Batik", batikInfo.info);
+          await setDialogue("Guru BaTIK", batikInfo.info);
         }
         await waitForPlayerClick();
       }
@@ -238,32 +238,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- SCENARIO 5: PENJELASAN INFORMATIKA ---
     await setDialogue(
-      "Guru Batik",
+      "Guru BaTIK",
       `Nah ${
         state.userName
       }, kamu sudah tahu tentang Batik ${state.batik1.toUpperCase()} dan Batik ${state.batik2.toUpperCase()}.`
     );
     await waitForPlayerClick();
     await setDialogue(
-      "Guru Batik",
+      "Guru BaTIK",
       "Dengarkan penjelasan gurumu tentang keterkaitan batik dan informatika... (Simulasi Jeda)"
     );
     await waitForPlayerClick();
 
     await setDialogue(
-      "Guru Batik",
+      "Guru BaTIK",
       "Sekarang kita masuk ke topik utama! Anggap tiap batik tadi adalah variabel aljabar x dan y."
     );
     await waitForPlayerClick();
 
     await setDialogue(
-      "Guru Batik",
+      "Guru BaTIK",
       `Misalnya:\n- Batik ${state.batik1.toUpperCase()} adalah x\n- Batik ${state.batik2.toUpperCase()} adalah y`
     );
     await waitForPlayerClick();
 
     await setDialogue(
-      "Guru Batik",
+      "Guru BaTIK",
       "Tugasmu: Buat algoritma untuk mencari nilai x dan y dari data yang akan saya berikan!"
     );
     await waitForPlayerClick();
@@ -295,56 +295,56 @@ document.addEventListener("DOMContentLoaded", () => {
     const eq2 = `${state.a2}x + ${state.b2}y = ${state.c2}`;
 
     await setDialogue(
-      "Guru Batik",
+      "Guru BaTIK",
       `Ini datanya:\nPersamaan 1: ${eq1}\nPersamaan 2: ${eq2}`
     );
     await waitForPlayerClick();
 
     // --- SCENARIO 7: SOLUSI MASALAH ---
     await setDialogue(
-      "Guru Batik",
+      "Guru BaTIK",
       "Gunakan Berpikir Komputasional (dekomposisi dan algoritma) untuk mencari nilai x dan y!"
     );
     await waitForPlayerClick();
     await setDialogue(
-      "Guru Batik",
+      "Guru BaTIK",
       "Jika sudah dapat jawabannya, silakan masukkan jawabanmu."
     );
 
     // --- SCENARIO 8: INPUT JAWABAN ---
     let xAns, yAns;
-    await setDialogue("Guru Batik", "Nilai x yang kamu temukan adalah:");
+    await setDialogue("Guru BaTIK", "Nilai x yang kamu temukan adalah:");
     xAns = parseInt(await waitForInput("Nilai x..."), 10);
 
-    await setDialogue("Guru Batik", "Nilai y yang kamu temukan adalah:");
+    await setDialogue("Guru BaTIK", "Nilai y yang kamu temukan adalah:");
     yAns = parseInt(await waitForInput("Nilai y..."), 10);
 
     // --- SCENARIO 9: CEK HASIL ---
     if (xAns === state.x && yAns === state.y) {
       await setDialogue(
-        "Guru Batik",
+        "Guru BaTIK",
         `🎉 Wah keren banget! Jawabanmu benar semua! (x=${state.x}, y=${state.y}).`
       );
     } else if (xAns === state.x) {
       await setDialogue(
-        "Guru Batik",
+        "Guru BaTIK",
         `Hampir! Nilai x (${state.x}) sudah benar, tapi nilai y salah. Jawaban seharusnya ${state.y}.`
       );
     } else if (yAns === state.y) {
       await setDialogue(
-        "Guru Batik",
+        "Guru BaTIK",
         `Hampir! Nilai y (${state.y}) sudah benar, tapi nilai x salah. Jawaban seharusnya ${state.x}.`
       );
     } else {
       await setDialogue(
-        "Guru Batik",
+        "Guru BaTIK",
         `Waduh, jawabannya masih salah semua nih. Jawaban yang benar: x = ${state.x}, y = ${state.y}. Coba diskusikan lagi ya!`
       );
     }
     await waitForPlayerClick();
 
     // --- SCENARIO 10: ULANGI? ---
-    await setDialogue("Guru Batik", "Mau coba soal yang baru lagi?");
+    await setDialogue("Guru BaTIK", "Mau coba soal yang baru lagi?");
     const loop = await waitForYN("Ya", "Tutup Program");
 
     if (loop) {
