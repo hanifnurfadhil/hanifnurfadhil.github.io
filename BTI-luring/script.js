@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
     y: 0,
   };
   let isTyping = false;
-  const TYPING_DELAY = 80;
+  const TYPING_DELAY = 50;
 
   // === Utility Functions ===
 
